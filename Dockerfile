@@ -1,17 +1,21 @@
-# Gunakan image Python yang sudah memiliki Chrome dan ChromeDriver
+# Gunakan image Selenium dengan Chrome dan ChromeDriver bawaan
 FROM selenium/standalone-chrome:latest
 
-# Set working directory di dalam container
+# Set user menjadi root agar bisa menjalankan apt-get
+USER root
+
+# Atur working directory dalam container
 WORKDIR /app
 
-# Install Python dan pip
-RUN apt-get update && apt-get install -y python3 python3-pip
+# Update dan install Python serta pip dengan akses root
+RUN apt-get update --allow-releaseinfo-change \
+    && apt-get install -y python3 python3-pip
 
-# Copy semua file ke dalam container
+# Copy semua file dari proyek ke dalam container
 COPY . .
 
-# Install dependencies dari requirements.txt
+# Install dependencies Python dari requirements.txt
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Jalankan script saat container dimulai
+# Perintah untuk menjalankan scraper
 CMD ["python3", "scraper.py"]
